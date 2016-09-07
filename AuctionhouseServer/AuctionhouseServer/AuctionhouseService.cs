@@ -18,11 +18,18 @@ namespace AuctionhouseServer
         internal string GetProducts()
         {
             string products ="Products:\n";
+            int productNumber = 0;
             foreach (Product product in productList)
             {
-                products += product.GetProduct();
+                productNumber++;
+                products += productNumber + ": " + product.GetProduct();
             }
             return products;
+        }
+
+        internal int GetProductAmount()
+        {
+            return productList.Count;
         }
     }
 }
