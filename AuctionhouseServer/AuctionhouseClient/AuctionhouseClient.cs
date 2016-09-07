@@ -33,6 +33,7 @@ namespace AuctionhouseClient
             // Handle userinput
             do
             {
+                
 
             } while (input.ToLower() != "exit");
 

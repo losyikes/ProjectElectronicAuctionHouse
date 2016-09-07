@@ -15,6 +15,14 @@ namespace AuctionhouseServer
         public string ProductInfo { get; set; }
         public int AuctionStatus { get; set; } // 1: can't bid, 2: can bid, 3: sold
         public decimal MinimumBid { get; set; }
+        public decimal CurrentBid { get; set; }
+
+        internal string GetProduct()
+        {
+            return "Productname: " + Name +
+                " Valuation: " + Valuation +
+                " Current Bid: " + CurrentBid + "\n";
+        }
 
         public Product(int id, string name, DateTime submitDate, decimal valuation, string productInfo, int auctionStatus, decimal mininumBid)
         {

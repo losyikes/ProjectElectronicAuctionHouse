@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuctionhouseServer.cs" />
+    <Compile Include="AuctionhouseService.cs" />
     <Compile Include="Bid.cs" />
     <Compile Include="ClientHandler.cs" />
     <Compile Include="Customer.cs" />

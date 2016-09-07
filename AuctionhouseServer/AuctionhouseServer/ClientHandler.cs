@@ -24,6 +24,7 @@ namespace AuctionhouseServer
             NetworkStream stream = new NetworkStream(clientSocket);
             StreamWriter writer = new StreamWriter(stream);
             StreamReader reader = new StreamReader(stream);
+            AuctionhouseService ahService = new AuctionhouseService();
             string clientText;
 
             // Handle client
@@ -31,6 +32,9 @@ namespace AuctionhouseServer
             {
                 clientText = reader.ReadLine();
                 Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
+
+                string products = ahService.GetProducts();
+                writer.WriteLine(products);
 
                 // Do stuff with clientText here
 
