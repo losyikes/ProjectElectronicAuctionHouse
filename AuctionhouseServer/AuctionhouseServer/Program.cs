@@ -10,6 +10,8 @@ namespace AuctionhouseServer
     {
         static void Main(string[] args)
         {
+            AuctionhouseServer server = new AuctionhouseServer(9001);
+            server.Run();
         }
     }
 }
