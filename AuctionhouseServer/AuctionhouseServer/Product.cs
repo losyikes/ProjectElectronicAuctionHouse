@@ -19,9 +19,9 @@ namespace AuctionhouseServer
 
         internal string GetProduct()
         {
-            return "Productname: " + Name +
-                " Valuation: " + Valuation +
-                " Current Bid: " + CurrentBid + "\n";
+            return "Productname: " + Name + ". " +
+                "Valuation: " + Valuation + " kr. " +
+                "Current Bid: " + CurrentBid + "kr.\n";
         }
 
         public Product(int id, string name, DateTime submitDate, decimal valuation, string productInfo, int auctionStatus, decimal mininumBid)

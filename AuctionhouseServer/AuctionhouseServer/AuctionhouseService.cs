@@ -34,8 +34,11 @@ namespace AuctionhouseServer
 
         internal void HardcodeProducts()
         {
-            Product product = new Product(1337, "Rembrandt, The Jewish Pride", DateTime.Now, 2000000, "Painting by Rembrandt", 2, 500000);
-            productList.Add(product);
+            Product product1 = new Product(1337, "Rembrandt, The Jewish Pride", DateTime.Now, 2000000, "Painting by Rembrandt", 2, 500000);
+            Product product2 = new Product(123, "Lenovo Z50", DateTime.Now, 2000, "Daniel's laptop", 2, 1000);
+
+            productList.Add(product1);
+            productList.Add(product2);
         }
     }
 }

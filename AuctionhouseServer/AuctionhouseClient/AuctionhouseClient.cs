@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AuctionhouseClient
@@ -12,6 +13,10 @@ namespace AuctionhouseClient
     {
         private string serverName;
         private int port;
+        TcpClient server;
+        NetworkStream stream;
+        StreamWriter writer;
+        StreamReader reader;
 
         public AuctionhouseClient(string serverName, int port)
         {
@@ -22,28 +27,29 @@ namespace AuctionhouseClient
         internal void Run()
         {
             // Initialize
-            TcpClient server = new TcpClient(serverName, port);
-            NetworkStream stream = server.GetStream();
-            StreamWriter writer = new StreamWriter(stream);
-            StreamReader reader = new StreamReader(stream);
-            string serverText;
+            server = new TcpClient(serverName, port);
+            stream = server.GetStream();
+            writer = new StreamWriter(stream);
+            reader = new StreamReader(stream);
             string input;
             Console.WriteLine("Welcome to EAL Auctionhouse!");
 
-            // Handle userinput
+            // Do stuff
+            Thread ContinuouslyReadThread = new Thread(ContinuouslyRead);
+            ContinuouslyReadThread.IsBackground = true;
+            ContinuouslyReadThread.Start();
 
-            //Console.Write("What is your name?");
-            //input = Console.ReadLine();
-            //writer.WriteLine(input);
-            //writer.Flush();
             do
             {
-                serverText = reader.ReadLine();
-                Console.WriteLine(serverText);
+                writer.WriteLine("query product list");
+                writer.Flush();
+                Thread.Sleep(300);
+
                 Console.Write("Which product would you like to bid on? ");
                 input = Console.ReadLine();
                 writer.WriteLine(input);
                 writer.Flush();
+
 
             } while (input.ToLower() != "exit");
 
@@ -52,6 +58,16 @@ namespace AuctionhouseClient
             writer.Close();
             stream.Close();
             server.Close();
+        }
+
+        private void ContinuouslyRead()
+        {
+            string serverText;
+            while (true)
+            {
+                serverText = reader.ReadLine();
+                Console.WriteLine(serverText);
+            }
         }
     }
 }

@@ -25,18 +25,30 @@ namespace AuctionhouseServer
             StreamWriter writer = new StreamWriter(stream);
             StreamReader reader = new StreamReader(stream);
             AuctionhouseService ahService = new AuctionhouseService();
+            ahService.HardcodeProducts();
             string clientText;
 
             // Handle client
             do
             {
-                ahService.HardcodeProducts();
-                string products = ahService.GetProducts();
-                writer.WriteLine(products);
-                writer.Flush();
-
                 clientText = reader.ReadLine();
                 Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
+
+                switch (clientText.ToLower())
+                {
+                    case "query product list":
+                        string products = ahService.GetProducts();
+                        writer.WriteLine(products);
+                        break;
+
+                    case "bid on 1":
+
+                        break;
+
+                    default:
+                        break;
+                }
+                writer.Flush();
 
             } while (clientText.ToLower() !="exit" );
 
