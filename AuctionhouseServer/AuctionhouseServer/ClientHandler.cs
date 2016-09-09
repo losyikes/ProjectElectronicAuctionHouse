@@ -34,22 +34,33 @@ namespace AuctionhouseServer
                 clientText = reader.ReadLine();
                 Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
 
-                switch (clientText.ToLower())
+                if (clientText == "query product list")
                 {
-                    case "query product list":
-                        string products = ahService.GetProducts();
-                        writer.WriteLine(products);
-                        break;
-
-                    case "bid on 1":
-
-                        break;
-
-                    default:
-                        break;
+                    string products = ahService.GetProducts();
+                    writer.WriteLine(products);
+                    writer.Flush();
                 }
-                writer.Flush();
-
+                else if (clientText.Split(' ')[0] == "product")
+                {
+                    int chosenProduct = int.Parse(clientText.ToLower().Split(' ')[1]);
+                    int productIndex = chosenProduct - 1;
+                    clientText = reader.ReadLine(); // waiting for client to place a bid
+                    decimal bid = decimal.Parse(clientText);
+                    /* We need to make AboveCurrentBid(), UpdateProduct() and GetCurrentBid()
+                    bool aboveCurrentBid = ahService.AboveCurrentBid(productIndex);
+                    if (aboveCurrentBid == true)
+                    {
+                        ahService.UpdateProduct(productIndex, bid); // -1, so it sends the correct index number
+                        writer.WriteLine("A bid of {0} kr. has been placed on product nr. {1}", bid, chosenProduct);
+                        writer.Flush();
+                    }
+                    else
+                    {
+                        writer.WriteLine("Bid is too low. The product's current bid is {0} kr.", ahService.GetCurrentBid(productIndex));
+                        writer.Flush();
+                    }
+                    */
+                }
             } while (clientText.ToLower() !="exit" );
 
             // End

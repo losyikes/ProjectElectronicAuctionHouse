@@ -45,11 +45,15 @@ namespace AuctionhouseClient
                 writer.Flush();
                 Thread.Sleep(300);
 
-                Console.Write("Which product would you like to bid on? ");
+                Console.Write("Which product would you like to bid on?");
+                input = Console.ReadLine();
+                writer.WriteLine("product " + input);
+                writer.Flush();
+
+                Console.Write("Please place your bid on product nr. {0}: ", input);
                 input = Console.ReadLine();
                 writer.WriteLine(input);
                 writer.Flush();
-
 
             } while (input.ToLower() != "exit");
 
