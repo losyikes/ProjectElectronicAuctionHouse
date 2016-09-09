@@ -30,13 +30,13 @@ namespace AuctionhouseServer
             // Handle client
             do
             {
-                clientText = reader.ReadLine();
-                Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
-
+                ahService.HardcodeProducts();
                 string products = ahService.GetProducts();
                 writer.WriteLine(products);
+                writer.Flush();
 
-                // Do stuff with clientText here
+                clientText = reader.ReadLine();
+                Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
 
             } while (clientText.ToLower() !="exit" );
 

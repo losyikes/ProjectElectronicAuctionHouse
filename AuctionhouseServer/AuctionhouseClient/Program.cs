@@ -10,7 +10,7 @@ namespace AuctionhouseClient
     {
         static void Main(string[] args)
         {
-            AuctionhouseClient client = new AuctionhouseClient("127.0.0.1", 45000);
+            AuctionhouseClient client = new AuctionhouseClient("127.0.0.1", 9001);
             client.Run();
         }
     }

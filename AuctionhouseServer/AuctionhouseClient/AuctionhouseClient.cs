@@ -31,9 +31,19 @@ namespace AuctionhouseClient
             Console.WriteLine("Welcome to EAL Auctionhouse!");
 
             // Handle userinput
+
+            //Console.Write("What is your name?");
+            //input = Console.ReadLine();
+            //writer.WriteLine(input);
+            //writer.Flush();
             do
             {
-                
+                serverText = reader.ReadLine();
+                Console.WriteLine(serverText);
+                Console.Write("Which product would you like to bid on? ");
+                input = Console.ReadLine();
+                writer.WriteLine(input);
+                writer.Flush();
 
             } while (input.ToLower() != "exit");
 
