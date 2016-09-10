@@ -12,11 +12,12 @@ namespace AuctionhouseServer
     {
         private Socket clientSocket;
         private int clientNumber;
-
-        public ClientHandler(Socket clientSocket, int clientNumber)
+        Screen screen;
+        public ClientHandler(Socket clientSocket, int clientNumber /*, Screen screen */)
         {
             this.clientSocket = clientSocket;
             this.clientNumber = clientNumber;
+            //this.screen = screen;
         }
         internal void Start()
         {
@@ -32,6 +33,7 @@ namespace AuctionhouseServer
             do
             {
                 clientText = reader.ReadLine();
+                //screen.PrintLine("Client " + clientNumber + " says: " + clientText);
                 Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
 
                 if (clientText == "query product list")
@@ -47,6 +49,7 @@ namespace AuctionhouseServer
                     clientText = reader.ReadLine(); // waiting for client to place a bid
                     decimal bid = decimal.Parse(clientText);
                     /* We need to make AboveCurrentBid(), UpdateProduct() and GetCurrentBid()
+                    Might consider if it should be called IsAboveCurrentBid for claritys sake - Morten
                     bool aboveCurrentBid = ahService.AboveCurrentBid(productIndex);
                     if (aboveCurrentBid == true)
                     {
@@ -64,6 +67,7 @@ namespace AuctionhouseServer
             } while (clientText.ToLower() !="exit" );
 
             // End
+            //screen.PrintLine("Client " + clientNumber + " disconnected");
             Console.WriteLine("Client {0} disconnected.", clientNumber);
             reader.Close();
             writer.Close();
