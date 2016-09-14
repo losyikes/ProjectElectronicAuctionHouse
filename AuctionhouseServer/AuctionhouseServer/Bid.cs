@@ -10,15 +10,18 @@ namespace AuctionhouseServer
     {
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
-        public int ProductId { get; set; }
+        public Product Product { get; set; }
         public int ClientID { get; set; }
 
-        public Bid(decimal amount, DateTime date, int productID, int clientID)
+        public Bid(decimal amount, DateTime date, Product product, int clientID)
         {
             Amount = amount;
             Date = date;
-            ProductId = productID;
+            Product = product;
             ClientID = clientID;
+            if(this.Amount > product.CurrentBid.Amount){
+                Product.CurrentBid = this;
+            }
         }
     }
 }

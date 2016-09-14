@@ -15,7 +15,7 @@ namespace AuctionhouseServer
         public string ProductInfo { get; set; }
         public int AuctionStatus { get; set; } // 1: can't bid, 2: can bid, 3: sold
         public decimal MinimumBid { get; set; }
-        public decimal CurrentBid { get; set; }
+        public Bid CurrentBid { get; set; }
 
         internal string GetProduct()
         {

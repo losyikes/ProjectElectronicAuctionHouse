@@ -31,7 +31,11 @@ namespace AuctionhouseServer
         {
             return productList.Count;
         }
-
+        void PlaceBid(Product product, decimal bid, int clientId)
+        {
+            Bid b = new Bid(bid, DateTime.Now, product, clientId);
+            
+        }
         internal void HardcodeProducts()
         {
             Product product1 = new Product(1337, "Rembrandt, The Jewish Pride", DateTime.Now, 2000000, "Painting by Rembrandt", 2, 500000);
