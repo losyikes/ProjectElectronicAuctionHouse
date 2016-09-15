@@ -35,12 +35,12 @@ namespace AuctionhouseServer
             while (!stop)
             {
                 screen.PrintLine("Server is ready for a new client to connect.");
-                //Console.WriteLine("Server is ready for a new client to connect.");
+                
 
                 Socket clientSocket = listener.AcceptSocket();
                 clientNumber++;
                 screen.PrintLine("Client" + clientNumber + ", connected.");
-                //Console.WriteLine("Client {0}, connected.", clientNumber);
+                
                 ClientHandler clientHandler = new ClientHandler(clientSocket, clientNumber, ahService, screen);
                 Thread ClientHandlerThread = new Thread(clientHandler.Start);
                 ClientHandlerThread.Start();
@@ -49,7 +49,7 @@ namespace AuctionhouseServer
 
             // End
             screen.PrintLine("Shutting down connection...");
-            //Console.WriteLine("Shutting down connection...");
+            
             listener.Stop();
             Thread.Sleep(3000);
         }

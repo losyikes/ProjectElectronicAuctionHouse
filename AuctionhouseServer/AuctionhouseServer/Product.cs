@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
+using System.Threading;
 
 namespace AuctionhouseServer
 {
@@ -17,6 +19,7 @@ namespace AuctionhouseServer
         public decimal MinimumBid { get; set; }
         public Bid CurrentBid { get; set; }
         public Bid LastBid { get; set; }
+        public string CurrentBidIp { get; set; }
         internal string GetProduct()
         {
             decimal bid = 0;
@@ -50,17 +53,19 @@ namespace AuctionhouseServer
             return isValid;
                 
         }
-        public void PlaceBid(decimal bid, int clientId)
+        public void PlaceBid(decimal bid, int clientId, string clientIP)
         {
             if(AuctionStatus == 0)
             {
                 AuctionStatus = 1;
             }
             Bid b = new Bid(bid, DateTime.Now, clientId);
+            CurrentBidIp = clientIP;
             LastBid = CurrentBid;
             CurrentBid = b;
 
         }
+        
         public decimal GetCurrentBid()
         {
             decimal currentBid = MinimumBid;
@@ -79,6 +84,11 @@ namespace AuctionhouseServer
             AuctionStatus = auctionStatus;
             MinimumBid = mininumBid;
 
+        }
+        internal void HardcodeCustomers()
+        {
+            Customer customer1 = new Customer(1, "Anders Larsen", "Møllergade 3", 5700, "Svendborg", 123456789);
+            Customer customer2 = new Customer(1, "Jens Mogensen", "Møllergade 3", 5000, "Odense", 987654321);
         }
     }
 }

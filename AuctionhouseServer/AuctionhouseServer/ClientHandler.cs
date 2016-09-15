@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace AuctionhouseServer
         StreamReader reader;
         AuctionhouseService ahService;
         Screen screen;
-        int chosenProduct;
+        public int ChosenProductId;
         string clientText  = "";
         public ClientHandler(Socket clientSocket, int clientNumber , AuctionhouseService ahService , Screen screen )
         {
@@ -28,6 +29,12 @@ namespace AuctionhouseServer
             this.ahService = ahService;
             this.screen = screen;
             this.Location = 0;
+        }
+        public string getIp()
+        {
+            string remoteIP = ((IPEndPoint)this.clientSocket.RemoteEndPoint).Address.ToString();
+            return remoteIP;
+            
         }
         internal void Start()
         {
@@ -43,26 +50,28 @@ namespace AuctionhouseServer
             {
                 if (isValidInput(clientText))
                 {
-                    int input;
+                    int input = 0;
                     decimal decInput = 0;
                     decimal bid = 0;
-                    if (int.TryParse(clientText, out input))
+                    int arrayLength = clientText.Split(' ').Length;
+                    if (int.TryParse(clientText, out input)) { }
+                      
+                    bool parseDec = decimal.TryParse(clientText, out decInput);
+                    if ( Location == 2 && parseDec )
                     {
-                        if (decimal.TryParse(clientText, out decInput) && Location == 2)
-                        {
-                            bid = decInput;
-                        }
+                        bid = decInput;
                     }
                     
                     if (Location == 1 && input != 0)
                     {
                         showProductMenu(input);
-                        chosenProduct = input;
+                        int productIndex = input - 1;
+                        ChosenProductId = ahService.GetProductByIndex(productIndex).Id;
                         Location = 2;
                     }
                     else if (Location == 2 && bid != 0)
                     {
-                        showBidMenu(chosenProduct, decInput);
+                        showBidMenu(ChosenProductId, bid);
                     }
                     else
                         Location = 0;
@@ -98,17 +107,21 @@ namespace AuctionhouseServer
         }
         void showBidMenu(int chosenProduct, decimal bid)
         {
-            int productIndex = chosenProduct - 1;
-            //clientText = reader.ReadLine(); // waiting for client to place a bid
-            Product product = ahService.GetProductByIndex(productIndex);
-
+            
+            
+            Product product = ahService.GetProductById(ChosenProductId);
+            
             if (product.IsValidBid(bid))
             {
-                product.PlaceBid(bid, clientNumber);
+                
+                product.PlaceBid(bid, clientNumber, getIp() );
+                Gavel gavel = new Gavel(product, ahService);
+                ahService.StartGavel(gavel);
+                
                 screen.PrintLine("A bid of " + bid + " kr. has been placed on product Id." + product.Id);
-                ahService.BroadcastToAllClientsInLocation("Current Bid on product Id. " + product.Id + " is " + product.GetCurrentBid() + " kr", Location);
+                ahService.BroadcastToAllClientsInLocation("Current Bid on product Id. " + product.Id + " is " + product.GetCurrentBid() + " kr", product.Id);
                 sendToClient("Your bid of " + bid + " kr. has been placed on product Id." + product.Id);
-                showBidStatusMenu(chosenProduct);
+                showBidStatusMenu();
             }
             else
             {
@@ -116,10 +129,10 @@ namespace AuctionhouseServer
             }
         }
         
-        void showBidStatusMenu(int chosenProduct)
+        void showBidStatusMenu()
         {
-            int productIndex = chosenProduct - 1;
-            Product product = ahService.GetProductByIndex(productIndex);
+            
+            Product product = ahService.GetProductById(ChosenProductId);
             sendToClient(product.GetProduct());
             sendToClient("Your current bid is winning, we will tell you when its not");
         }

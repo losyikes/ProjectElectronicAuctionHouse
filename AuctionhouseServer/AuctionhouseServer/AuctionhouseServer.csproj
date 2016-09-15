@@ -48,6 +48,7 @@
     <Compile Include="Bid.cs" />
     <Compile Include="ClientHandler.cs" />
     <Compile Include="Customer.cs" />
+    <Compile Include="Gavel.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
