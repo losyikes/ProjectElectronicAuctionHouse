@@ -12,35 +12,38 @@ namespace AuctionhouseServer
     {
         private Socket clientSocket;
         private int clientNumber;
+        NetworkStream stream;
+        StreamWriter writer;
+        StreamReader reader;
+        List<StreamWriter> clientWriters;
+        AuctionhouseService ahService;
         Screen screen;
-        public ClientHandler(Socket clientSocket, int clientNumber /*, Screen screen */)
+        public ClientHandler(Socket clientSocket, int clientNumber , AuctionhouseService ahService , Screen screen )
         {
             this.clientSocket = clientSocket;
             this.clientNumber = clientNumber;
-            //this.screen = screen;
+            this.ahService = ahService;
+            this.screen = screen;
         }
         internal void Start()
         {
             // Initialize
-            NetworkStream stream = new NetworkStream(clientSocket);
-            StreamWriter writer = new StreamWriter(stream);
-            StreamReader reader = new StreamReader(stream);
-            AuctionhouseService ahService = new AuctionhouseService();
-            ahService.HardcodeProducts();
+            this.stream = new NetworkStream(clientSocket);
+            this.writer = new StreamWriter(stream);
+            this.reader = new StreamReader(stream);
             string clientText;
 
             // Handle client
             do
             {
                 clientText = reader.ReadLine();
-                //screen.PrintLine("Client " + clientNumber + " says: " + clientText);
+                screen.PrintLine("Client " + clientNumber + " says: " + clientText);
                 Console.WriteLine("Client {0} says: {1}", clientNumber, clientText);
 
                 if (clientText == "query product list")
                 {
-                    string products = ahService.GetProducts();
-                    writer.WriteLine(products);
-                    writer.Flush();
+                    string products = ahService.GetProductsMenu();
+                    sendToClient(products);
                 }
                 else if (clientText.Split(' ')[0] == "product")
                 {
@@ -48,31 +51,35 @@ namespace AuctionhouseServer
                     int productIndex = chosenProduct - 1;
                     clientText = reader.ReadLine(); // waiting for client to place a bid
                     decimal bid = decimal.Parse(clientText);
-                    /* We need to make AboveCurrentBid(), UpdateProduct() and GetCurrentBid()
-                    Might consider if it should be called IsAboveCurrentBid for claritys sake - Morten
-                    bool aboveCurrentBid = ahService.AboveCurrentBid(productIndex);
-                    if (aboveCurrentBid == true)
+
+                    Product product = ahService.GetProductByIndex(productIndex);
+                    if (product.IsValidBid(bid))
                     {
-                        ahService.UpdateProduct(productIndex, bid); // -1, so it sends the correct index number
-                        writer.WriteLine("A bid of {0} kr. has been placed on product nr. {1}", bid, chosenProduct);
-                        writer.Flush();
+                        product.PlaceBid(bid, clientNumber);
+                        screen.PrintLine("A bid of " + bid + " kr. has been placed on product Id." + product.Id);
+                        sendToClient("A bid of " + bid + " kr. has been placed on product Id." + product.Id);
                     }
                     else
                     {
-                        writer.WriteLine("Bid is too low. The product's current bid is {0} kr.", ahService.GetCurrentBid(productIndex));
-                        writer.Flush();
+                        sendToClient("Bid is too low. The product's current bid is "+ product.GetCurrentBid() + " kr.");
                     }
-                    */
+                        
+                    
                 }
             } while (clientText.ToLower() !="exit" );
 
             // End
-            //screen.PrintLine("Client " + clientNumber + " disconnected");
-            Console.WriteLine("Client {0} disconnected.", clientNumber);
+            screen.PrintLine("Client " + clientNumber + " disconnected");
+            //Console.WriteLine("Client {0} disconnected.", clientNumber);
             reader.Close();
             writer.Close();
             stream.Close();
             clientSocket.Close();
+        } // Start() END
+        void sendToClient(string input)
+        {
+            writer.WriteLine(input);
+            writer.Flush();
         }
     }
 }

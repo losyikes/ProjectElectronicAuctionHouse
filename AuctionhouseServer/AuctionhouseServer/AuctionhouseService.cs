@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,13 +10,17 @@ namespace AuctionhouseServer
     class AuctionhouseService
     {
         List<Product> productList;
+        ClientHandler clientHandler;
+        public List<StreamWriter> clientWriters { get; set; }  
 
         public AuctionhouseService()
         {
             productList = new List<Product>();
+            HardcodeProducts();
+            
         }
 
-        internal string GetProducts()
+        internal string GetProductsMenu()
         {
             string products ="Products:\n";
             int productNumber = 0;
@@ -31,11 +36,14 @@ namespace AuctionhouseServer
         {
             return productList.Count;
         }
-        void PlaceBid(Product product, decimal bid, int clientId)
+        public Product GetProductByIndex(int productIndex)
         {
-            Bid b = new Bid(bid, DateTime.Now, product, clientId);
-            
+            Product product = productList[productIndex];
+            return product;
         }
+        
+        
+        
         internal void HardcodeProducts()
         {
             Product product1 = new Product(1337, "Rembrandt, The Jewish Pride", DateTime.Now, 2000000, "Painting by Rembrandt", 2, 500000);
