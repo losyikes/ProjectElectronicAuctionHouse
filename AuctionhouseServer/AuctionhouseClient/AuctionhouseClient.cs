@@ -17,6 +17,7 @@ namespace AuctionhouseClient
         NetworkStream stream;
         StreamWriter writer;
         StreamReader reader;
+        Screen screen = new Screen();
 
         public AuctionhouseClient(string serverName, int port)
         {
@@ -32,29 +33,16 @@ namespace AuctionhouseClient
             writer = new StreamWriter(stream);
             reader = new StreamReader(stream);
             string input;
-            Console.WriteLine("Welcome to EAL Auctionhouse!");
-
             // Do stuff
             Thread ContinuouslyReadThread = new Thread(ContinuouslyRead);
             ContinuouslyReadThread.IsBackground = true;
             ContinuouslyReadThread.Start();
-
+            
             do
             {
-                writer.WriteLine("query product list");
-                writer.Flush();
-                Thread.Sleep(300);
-
-                Console.Write("Which product would you like to bid on?");
-                input = Console.ReadLine();
-                writer.WriteLine("product " + input);
-                writer.Flush();
-
-                Console.Write("Please place your bid on product nr. {0}: ", input);
-                input = Console.ReadLine();
-                writer.WriteLine(input);
-                writer.Flush();
-
+                    input = Console.ReadLine(); //receives bid
+                    writer.WriteLine(input);
+                    writer.Flush();
             } while (input.ToLower() != "exit");
 
             // End
@@ -70,7 +58,7 @@ namespace AuctionhouseClient
             while (true)
             {
                 serverText = reader.ReadLine();
-                Console.WriteLine(serverText);
+                screen.PrintLine(serverText);
             }
         }
     }

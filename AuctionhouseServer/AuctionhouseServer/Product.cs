@@ -13,10 +13,10 @@ namespace AuctionhouseServer
         public DateTime SubmitDate { get; set; }
         public decimal Valuation { get; set; }
         public string ProductInfo { get; set; }
-        public int AuctionStatus { get; set; } // 1: can't bid, 2: can bid, 3: sold
+        public int AuctionStatus { get; set; } // 0: pending, 1: started, 2: ended
         public decimal MinimumBid { get; set; }
         public Bid CurrentBid { get; set; }
-
+        public Bid LastBid { get; set; }
         internal string GetProduct()
         {
             decimal bid = 0;
@@ -52,7 +52,12 @@ namespace AuctionhouseServer
         }
         public void PlaceBid(decimal bid, int clientId)
         {
+            if(AuctionStatus == 0)
+            {
+                AuctionStatus = 1;
+            }
             Bid b = new Bid(bid, DateTime.Now, clientId);
+            LastBid = CurrentBid;
             CurrentBid = b;
 
         }

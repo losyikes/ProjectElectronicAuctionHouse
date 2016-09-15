@@ -15,14 +15,14 @@ namespace AuctionhouseServer
         private IPAddress IP = IPAddress.Parse("127.0.0.1");
         private int port;
         private volatile bool stop;
-        Screen screen = new Screen();
-        private List<StreamWriter> clientWriters = new List<StreamWriter>();
-        AuctionhouseService ahService = new AuctionhouseService();
+        public Screen screen = new Screen();
+        public List<ClientHandler> ClientHandlers = new List<ClientHandler>();
+        AuctionhouseService ahService;
         public AuctionhouseServer(int port)
         {
             this.port = port;
+            ahService = new AuctionhouseService(this);
         }
-
         internal void Run()
         {
             // Initialize
@@ -41,9 +41,10 @@ namespace AuctionhouseServer
                 clientNumber++;
                 screen.PrintLine("Client" + clientNumber + ", connected.");
                 //Console.WriteLine("Client {0}, connected.", clientNumber);
-
-                Thread ClientHandlerThread = new Thread(new ClientHandler(clientSocket, clientNumber, ahService, screen).Start);
+                ClientHandler clientHandler = new ClientHandler(clientSocket, clientNumber, ahService, screen);
+                Thread ClientHandlerThread = new Thread(clientHandler.Start);
                 ClientHandlerThread.Start();
+                ClientHandlers.Add(clientHandler);
             }
 
             // End
