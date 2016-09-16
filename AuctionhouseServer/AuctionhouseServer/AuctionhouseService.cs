@@ -71,11 +71,6 @@ namespace AuctionhouseServer
             }
         }
 
-        internal int GetProductAmount()
-        {
-            return productList.Count;
-        }
-
         public Product GetProductByIndex(int productIndex)
         {
             Product product = productList[productIndex];
