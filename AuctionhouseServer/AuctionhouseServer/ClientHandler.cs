@@ -45,11 +45,11 @@ namespace AuctionhouseServer
             this.writer = new StreamWriter(stream);
             this.reader = new StreamReader(stream);
             
-            sendToClient("Welcome to EAL Auctionhouse!");
+            SendToClient("Welcome to EAL Auctionhouse!");
             // Handle client
             do
             {
-                if (isValidInput(clientText))
+                if (IsValidInput(clientText))
                 {
                     int input = 0;
                     decimal decInput = 0;
@@ -65,25 +65,25 @@ namespace AuctionhouseServer
                     
                     if (MenuLocation == 1 && input != 0)
                     {
-                        showProductMenu(input);
+                        ShowProductMenu(input);
                         int productIndex = input - 1;
                         ChosenProductId = ahService.GetProductByIndex(productIndex).Id;
                         MenuLocation = 2;
                     }
                     else if (MenuLocation == 2 && bid != 0)
                     {
-                        showBidMenu(ChosenProductId, bid);
+                        ShowBidMenu(ChosenProductId, bid);
                     }
                     else
                         MenuLocation = 0;
                 }
                 else if(MenuLocation == 0)
                 {
-                    showMainMenu();
+                    ShowMainMenu();
                 }
                 else
                 {
-                    sendToClient("Invalid input try again");
+                    SendToClient("Invalid input try again");
                 }
                 clientText = reader.ReadLine();
                 screen.PrintLine("Client " + clientNumber + " says: " + clientText);
@@ -98,17 +98,17 @@ namespace AuctionhouseServer
             clientSocket.Close();
         } // Start() END
 
-        void showProductMenu(int chosenProduct)
+        private void ShowProductMenu(int chosenProduct)
         {
             int productIndex = chosenProduct - 1;
             Product product = ahService.GetProductByIndex(productIndex);
 
-            sendToClient(product.GetProduct());
-            sendToClient("Please place your bid");
+            SendToClient(product.GetProduct());
+            SendToClient("Please place your bid:");
             screen.PrintLine("Info for Product Id. " + product.Id + " sent to Client " + clientNumber);
         }
 
-        void showBidMenu(int chosenProduct, decimal bid)
+        private void ShowBidMenu(int chosenProduct, decimal bid)
         {
             Product product = ahService.GetProductById(ChosenProductId);
             
@@ -120,32 +120,31 @@ namespace AuctionhouseServer
                 
                 screen.PrintLine("A bid of " + bid + " kr. has been placed on product Id." + product.Id);
                 ahService.BroadcastToAllClientsInLocation("Current Bid on product Id. " + product.Id + " is " + product.GetCurrentBid() + " kr", product.Id);
-                sendToClient("Your bid of " + bid + " kr. has been placed on product Id." + product.Id);
-                showBidStatusMenu();
+                SendToClient("Your bid of " + bid + " kr. has been placed on product Id." + product.Id);
+                ShowBidStatusMenu();
             }
             else
             {
-                sendToClient("Bid is too low. The product's current bid is " + product.GetCurrentBid() + " kr.");
+                SendToClient("Bid is too low. The product's current bid is " + product.GetCurrentBid() + " kr.");
             }
         }
         
-        void showBidStatusMenu()
+        private void ShowBidStatusMenu()
         {
             Product product = ahService.GetProductById(ChosenProductId);
-            sendToClient(product.GetProduct());
-            sendToClient("Your current bid is winning, we will tell you when its not");
+            SendToClient(product.GetProduct());
+            SendToClient("Your current bid is winning, we will tell you when its not");
         }
 
-        void showMainMenu()
+        private void ShowMainMenu()
         {
             string products = ahService.GetProductsMenu();
-            sendToClient(products);
-            //Thread.Sleep(300);
-            sendToClient("Which product would you like to bid on ? ");
+            SendToClient(products);
+            SendToClient("Which product would you like to bid on? ");
             MenuLocation = 1;
         }
 
-        bool isValidInput(string clientText)
+        private bool IsValidInput(string clientText)
         {
             bool isValid = false;
             int number;
@@ -157,7 +156,7 @@ namespace AuctionhouseServer
             return isValid;
         }
         
-        void sendToClient(string input)
+        private void SendToClient(string input)
         {
             writer.WriteLine(input);
             writer.Flush();
