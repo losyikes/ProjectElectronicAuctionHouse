@@ -12,7 +12,7 @@ namespace AuctionhouseServer
 {
     class ClientHandler
     {
-        public int Location { get; set; }
+        public int MenuLocation { get; set; }
         private Socket clientSocket;
         public int clientNumber;
         NetworkStream stream;
@@ -28,7 +28,7 @@ namespace AuctionhouseServer
             this.clientNumber = clientNumber;
             this.ahService = ahService;
             this.screen = screen;
-            this.Location = 0;
+            this.MenuLocation = 0;
         }
         public string getIp()
         {
@@ -57,26 +57,26 @@ namespace AuctionhouseServer
                     if (int.TryParse(clientText, out input)) { }
                       
                     bool parseDec = decimal.TryParse(clientText, out decInput);
-                    if ( Location == 2 && parseDec )
+                    if ( MenuLocation == 2 && parseDec )
                     {
                         bid = decInput;
                     }
                     
-                    if (Location == 1 && input != 0)
+                    if (MenuLocation == 1 && input != 0)
                     {
                         showProductMenu(input);
                         int productIndex = input - 1;
                         ChosenProductId = ahService.GetProductByIndex(productIndex).Id;
-                        Location = 2;
+                        MenuLocation = 2;
                     }
-                    else if (Location == 2 && bid != 0)
+                    else if (MenuLocation == 2 && bid != 0)
                     {
                         showBidMenu(ChosenProductId, bid);
                     }
                     else
-                        Location = 0;
+                        MenuLocation = 0;
                 }
-                else if(Location == 0)
+                else if(MenuLocation == 0)
                 {
                     showMainMenu();
                 }
@@ -142,7 +142,7 @@ namespace AuctionhouseServer
             sendToClient(products);
             //Thread.Sleep(300);
             sendToClient("Which product would you like to bid on ? ");
-            Location = 1;
+            MenuLocation = 1;
         }
         bool isValidInput(string clientText)
         {
