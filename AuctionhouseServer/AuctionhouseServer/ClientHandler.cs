@@ -114,7 +114,6 @@ namespace AuctionhouseServer
             
             if (product.IsValidBid(bid))
             {
-                
                 product.PlaceBid(bid, clientNumber, getIp() );
                 Gavel gavel = new Gavel(product, ahService);
                 ahService.StartGavel(gavel);

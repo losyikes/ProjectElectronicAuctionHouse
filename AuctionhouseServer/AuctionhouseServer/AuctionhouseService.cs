@@ -14,7 +14,6 @@ namespace AuctionhouseServer
         public List<StreamWriter> clientWriters { get; set; }
         public AuctionhouseServer server;
         List<Product> productList;
-        ClientHandler clientHandler;
         
         public AuctionhouseService(AuctionhouseServer server)
         {
@@ -25,7 +24,6 @@ namespace AuctionhouseServer
         
         internal void StartGavel(Gavel gavel)
         {
-            
             if (gavel.GavelStatus == 0)
             {
                 Thread gavelThread = new Thread(gavel.Start);
@@ -35,6 +33,7 @@ namespace AuctionhouseServer
             else
                 gavel.ResetGavel();
         }
+
         internal string GetProductsMenu()
         {
             string products ="Products:\n";
@@ -46,20 +45,16 @@ namespace AuctionhouseServer
                     productNumber++;
                     products += productNumber + ": " + product.GetProduct();
                 }
-                
             }
-            
             return products;
         }
         
         public void BroadcastToAllClientsInLocation(string input, int productId)
         {
-            
             foreach(ClientHandler ch in server.ClientHandlers)
             {
                 if(productId == ch.ChosenProductId && productId != 0)
                 {
-                    
                     Product product = this.GetProductById(productId);
                     ch.writer.WriteLine(input);
                     ch.writer.Flush();
@@ -75,20 +70,24 @@ namespace AuctionhouseServer
                 }
             }
         }
+
         internal int GetProductAmount()
         {
             return productList.Count;
         }
+
         public Product GetProductByIndex(int productIndex)
         {
             Product product = productList[productIndex];
             return product;
         }
+
         public Product GetProductById(int productId)
         {
             Product product = productList.Where(x => x.Id == productId).FirstOrDefault();
             return product;
         }
+
         internal void HardcodeProducts()
         {
             Product product1 = new Product(1337, "Rembrandt, The Jewish Pride", DateTime.Now, 2000000, "Painting by Rembrandt", 0, 500000);
@@ -97,6 +96,5 @@ namespace AuctionhouseServer
             productList.Add(product1);
             productList.Add(product2);
         }
-        
     }
 }

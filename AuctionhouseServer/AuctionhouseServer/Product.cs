@@ -20,6 +20,7 @@ namespace AuctionhouseServer
         public Bid CurrentBid { get; set; }
         public Bid LastBid { get; set; }
         public string CurrentBidIp { get; set; }
+
         internal string GetProduct()
         {
             decimal bid = 0;
@@ -37,6 +38,7 @@ namespace AuctionhouseServer
                 "Valuation: " + Valuation + " kr. " +
                 "Current Bid: " + bid + "kr.\n";
         }
+
         public bool IsValidBid(decimal bid)
         {
             bool isValid = false;
@@ -51,8 +53,8 @@ namespace AuctionhouseServer
                     isValid = true;
             }
             return isValid;
-                
         }
+
         public void PlaceBid(decimal bid, int clientId, string clientIP)
         {
             if(AuctionStatus == 0)
@@ -63,7 +65,6 @@ namespace AuctionhouseServer
             CurrentBidIp = clientIP;
             LastBid = CurrentBid;
             CurrentBid = b;
-
         }
         
         public decimal GetCurrentBid()
@@ -74,6 +75,7 @@ namespace AuctionhouseServer
 
             return currentBid;
         }
+
         public Product(int id, string name, DateTime submitDate, decimal valuation, string productInfo, int auctionStatus, decimal mininumBid)
         {
             Id = id;
@@ -83,8 +85,8 @@ namespace AuctionhouseServer
             ProductInfo = productInfo;
             AuctionStatus = auctionStatus;
             MinimumBid = mininumBid;
-
         }
+
         internal void HardcodeCustomers()
         {
             Customer customer1 = new Customer(1, "Anders Larsen", "Møllergade 3", 5700, "Svendborg", 123456789);

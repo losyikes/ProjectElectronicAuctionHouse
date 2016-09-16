@@ -12,6 +12,7 @@ namespace AuctionhouseServer
         {
             Console.WriteLine(input);
         }
+
         public void PrintLine(string input)
         {
             Console.WriteLine(input);

@@ -18,11 +18,13 @@ namespace AuctionhouseServer
         public Screen screen = new Screen();
         public List<ClientHandler> ClientHandlers = new List<ClientHandler>();
         AuctionhouseService ahService;
+
         public AuctionhouseServer(int port)
         {
             this.port = port;
             ahService = new AuctionhouseService(this);
         }
+
         internal void Run()
         {
             // Initialize
@@ -35,7 +37,6 @@ namespace AuctionhouseServer
             while (!stop)
             {
                 screen.PrintLine("Server is ready for a new client to connect.");
-                
 
                 Socket clientSocket = listener.AcceptSocket();
                 clientNumber++;

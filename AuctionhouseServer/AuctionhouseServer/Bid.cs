@@ -10,7 +10,6 @@ namespace AuctionhouseServer
     {
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
-        
         public int ClientID { get; set; }
 
         public Bid(decimal amount, DateTime date, int clientID)
@@ -18,7 +17,6 @@ namespace AuctionhouseServer
             Amount = amount;
             Date = date;
             ClientID = clientID;
-            
         }
     }
 }

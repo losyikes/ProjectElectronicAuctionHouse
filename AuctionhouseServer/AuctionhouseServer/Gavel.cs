@@ -13,12 +13,14 @@ namespace AuctionhouseServer
         Product product;
         AuctionhouseService ahService;
         public int GavelStatus { get; set; } // 0=ended, 1= running
+
         public Gavel(Product product, AuctionhouseService ahService)
         {
             this.product = product;
             this.ahService = ahService;
             this.GavelStatus = 0;
         }
+
         internal void Start()
         {
             bool keepGoing = true;
@@ -45,9 +47,9 @@ namespace AuctionhouseServer
                     product.AuctionStatus = 2;
                     keepGoing = false;
                 }
-
             }
         }
+
         internal void ResetGavel()
         {
             seconds = 0;
