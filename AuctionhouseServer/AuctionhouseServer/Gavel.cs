@@ -12,6 +12,7 @@ namespace AuctionhouseServer
         int seconds = 0;
         Product product;
         AuctionhouseService ahService;
+        object gavelSecondsLock = new object();
         public int GavelStatus { get; set; } // 0=ended, 1= running
 
         public Gavel(Product product, AuctionhouseService ahService)
@@ -52,7 +53,11 @@ namespace AuctionhouseServer
 
         internal void ResetGavel()
         {
-            seconds = 0;
+            lock (gavelSecondsLock)
+            {
+                seconds = 0;
+            }
+            
         }
     }
 }

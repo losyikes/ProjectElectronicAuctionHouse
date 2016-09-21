@@ -21,19 +21,6 @@ namespace AuctionhouseServer
             this.server = server;
             HardcodeProducts();
         }
-        
-        internal void StartGavel(Gavel gavel)
-        {
-            if (gavel.GavelStatus == 0)
-            {
-                Thread gavelThread = new Thread(gavel.Start);
-                gavelThread.Start();
-            }
-            
-            else
-                gavel.ResetGavel();
-        }
-
         internal string GetProductsMenu()
         {
             string products ="Products:\n";

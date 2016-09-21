@@ -114,10 +114,7 @@ namespace AuctionhouseServer
             
             if (product.IsValidBid(bid))
             {
-                product.PlaceBid(bid, clientNumber, getIp() );
-                Gavel gavel = new Gavel(product, ahService);
-                ahService.StartGavel(gavel);
-                
+                product.PlaceBid(bid, clientNumber, getIp(), ahService);
                 screen.PrintLine("A bid of " + bid + " kr. has been placed on product Id." + product.Id);
                 ahService.BroadcastToAllClientsInLocation("Current Bid on product Id. " + product.Id + " is " + product.GetCurrentBid() + " kr", product.Id);
                 SendToClient("Your bid of " + bid + " kr. has been placed on product Id." + product.Id);

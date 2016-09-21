@@ -20,7 +20,8 @@ namespace AuctionhouseServer
         public Bid CurrentBid { get; set; }
         public Bid LastBid { get; set; }
         public string CurrentBidIp { get; set; }
-
+        public Gavel Gavel { get; set; }
+        object bidLock = new object();
         internal string GetProduct()
         {
             decimal bid = 0;
@@ -55,16 +56,29 @@ namespace AuctionhouseServer
             return isValid;
         }
 
-        public void PlaceBid(decimal bid, int clientId, string clientIP)
+        public void PlaceBid(decimal bid, int clientId, string clientIP, AuctionhouseService ahService)
         {
-            if(AuctionStatus == 0)
+            if (AuctionStatus == 0)
             {
                 AuctionStatus = 1;
+                Gavel gavel = new Gavel(this, ahService);
+                this.Gavel = gavel;
+                Thread gavelThread = new Thread(gavel.Start);
+                gavelThread.Start();
             }
+            else
+            {
+                this.Gavel.ResetGavel();
+            }
+                
             Bid b = new Bid(bid, DateTime.Now, clientId);
-            CurrentBidIp = clientIP;
-            LastBid = CurrentBid;
-            CurrentBid = b;
+            lock (bidLock)
+            {
+                CurrentBidIp = clientIP;
+                LastBid = CurrentBid;
+                CurrentBid = b;
+            }
+            
         }
         
         public decimal GetCurrentBid()
